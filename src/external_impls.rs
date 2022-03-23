@@ -194,3 +194,17 @@ mod actix_impl {
         }
     }
 }
+
+#[cfg(feature = "bytes")]
+mod bytes_impl {
+    use crate::{Context, DeepSizeOf};
+    use core::mem::size_of;
+
+    impl DeepSizeOf for bytes::Bytes {
+        fn deep_size_of_children(&self, context: &mut Context) -> usize {
+            // ignores the size of the data itself and only counts the size of the Bytes struct
+            // to avoid overcounting any shared bytes
+            size_of::<usize>() * 4
+        }
+    }
+}
